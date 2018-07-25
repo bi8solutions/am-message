@@ -10,12 +10,12 @@ import {Subject} from "rxjs/Subject";
 export class MessageService {
 
   clientId = uuid();
-  eventSubject: Subject<EventMsg> = new Subject<EventMsg>();
+  globalEvents: Subject<EventMsg> = new Subject<EventMsg>();
 
   constructor(private stompService: StompService,
               private uaaEventService: UaaEventService) {
 
-    this.eventSubject.subscribe(msg => {
+    this.globalEvents.subscribe(msg => {
       console.dir(msg);
     });
 
@@ -35,11 +35,15 @@ export class MessageService {
       }
     });
 
-    this.sub<EventMsg>(MsgType.Event, this.eventSubject);
+    this.sub<EventMsg>(MsgType.Event, this.globalEvents);
   }
 
-  sub<T extends Msg>(type: MsgType, subject: Subject<T>) {
-    return this.stompService.subscribe(type).subscribe(res => {
+  sub<T extends Msg>(type: MsgType, subject: Subject<T>, url?: string) {
+    let dest = type as string;
+    if (url) {
+      dest += `/${url}`;
+    }
+    return this.stompService.subscribe(dest).subscribe(res => {
       let msg = JSON.parse(res.body) as T;
       if (msg.originId === this.clientId && msg.receiveOrigin) {
         subject.next(msg);
@@ -47,11 +51,15 @@ export class MessageService {
     });
   }
 
-  pub(msg: Msg) {
+  pub(msg: Msg, url?: string) {
+    let dest = msg.type as string;
+    if (url) {
+      dest += `/${url}`;
+    }
     msg.originId = this.clientId;
 
     const message = JSON.stringify(msg);
-    this.stompService.publish(msg.type, message);
+    this.stompService.publish(dest, message);
   }
 
 

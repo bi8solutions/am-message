@@ -27,7 +27,7 @@
     "@angular/platform-browser": "6.0.9",
     "@angular/platform-browser-dynamic": "6.0.9",
     "@angular/router": "6.0.9",
-    "@bi8/am-uaa": "^6.0.1"
+    "@bi8/am-uaa": "^6.0.1",
     "@stomp/ng2-stompjs": "^4.0.0",
     "sockjs-client": "^1.1.5",
     "core-js": "^2.5.7",
