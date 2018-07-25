@@ -1,38 +1,58 @@
-import {Injectable, Inject} from '@angular/core';
+import {Injectable} from '@angular/core';
+import {v4 as uuid} from 'uuid';
+import {StompService} from "@stomp/ng2-stompjs";
+import {UaaEvent, UaaEventService} from "@bi8/am-uaa";
+import {EventMsg, InfoMsg, Msg, MsgType} from "./message";
+import {Subject} from "rxjs/Subject";
 
-import * as _ from 'lodash';
-
-interface Wrapper {
-  value: any;
-}
 
 @Injectable({providedIn: 'root'})
 export class MessageService {
 
-  constructor() {
+  clientId = uuid();
+  eventSubject: Subject<EventMsg> = new Subject<EventMsg>();
+
+  constructor(private stompService: StompService,
+              private uaaEventService: UaaEventService) {
+
+    this.eventSubject.subscribe(msg => {
+      console.dir(msg);
+    });
+
+    this.uaaEventService.subscribe((event: UaaEvent) => {
+      switch (event) {
+        case UaaEvent.LOGIN_SUCCESS:
+          this.pub(new InfoMsg('LOGIN_SUCCESS'));
+          break;
+        case UaaEvent.LOAD_IDENTITY_SUCCESS:
+          if (!this.stompService.connected()) {
+            this.pub(new InfoMsg('LOGIN_SUCCESS'));
+          }
+          break;
+        case UaaEvent.LOGOUT_SUCCESS:
+          this.pub(new InfoMsg('LOGOUT_SUCCESS'));
+          break;
+      }
+    });
+
+    this.sub<EventMsg>(MsgType.Event, this.eventSubject);
   }
 
-  remove(key: string){
-    localStorage.removeItem(key);
+  sub<T extends Msg>(type: MsgType, subject: Subject<T>) {
+    return this.stompService.subscribe(type).subscribe(res => {
+      let msg = JSON.parse(res.body) as T;
+      if (msg.originId === this.clientId && msg.receiveOrigin) {
+        subject.next(msg);
+      }
+    });
   }
 
-  exists(key) : boolean {
-    let found = localStorage.getItem(key);
-    return !_.isNil(found);
+  pub(msg: Msg) {
+    msg.originId = this.clientId;
+
+    const message = JSON.stringify(msg);
+    this.stompService.publish(msg.type, message);
   }
 
-  get(key: string, defaultValue?: any) : any {
-    let found = localStorage.getItem(key);
-    if (!_.isNil(found)){
-      let wrapper : Wrapper = JSON.parse(found) as Wrapper;
-      return wrapper && wrapper.value ? wrapper.value : defaultValue;
-    } else {
-      return defaultValue;
-    }
-  }
 
-  set(key: string, value: any){
-    let wrapper : Wrapper = { value: value };
-    localStorage.setItem(key, JSON.stringify(wrapper));
-  }
 }

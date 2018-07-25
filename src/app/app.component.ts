@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MessageService} from "./modules/am-message/message.service";
+import {UaaEvent, UaaEventService} from "@bi8/am-uaa";
+import {EventMsg, EventType} from "./modules/am-message/message";
 
 @Component({
   selector: 'app-root',
@@ -9,9 +11,21 @@ import {MessageService} from "./modules/am-message/message.service";
 export class AppComponent implements OnInit {
   title = 'app';
 
-  constructor(private messageService: MessageService) {
+  constructor(private messageService: MessageService,
+              private uaaEventService: UaaEventService) {
   }
 
   ngOnInit(): void {
+    const msg = new EventMsg(EventType.OpenedPage,true, 'home');
+    this.messageService.pub(msg);
+  }
+
+  broadcastLogin() {
+    this.uaaEventService.broadcast(UaaEvent.LOGIN_SUCCESS);
+  }
+
+  sendEvent() {
+    const msg = new EventMsg(EventType.Interact,true, ['home', 'button_interact']);
+    this.messageService.pub(msg);
   }
 }
