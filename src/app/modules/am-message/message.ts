@@ -1,36 +1,39 @@
 export enum MsgType {
-  Event = '/topic/event',
-  Info = '/app/info'
-}
-
-export enum EventType {
-  OpenedPage,
-  ClosedPage,
-  Interact
+  Event = 'event',
+  Info = 'info'
 }
 
 export class Msg {
   originId: string;
+  ts: Date;
 
   constructor(public type: string,
               public receiveOrigin: boolean) {
   }
 }
 
+export enum EventType {
+  OpenedPage = 'OpenedPage',
+  ClosedPage = 'ClosedPage',
+  Interact = 'Interact',
+  Reading = 'Reading',
+  Editing = 'Editnig',
+  LoggedIn = 'LoggedIn',
+  LoggedOut = 'LoggedOut'
+}
+
 export class EventMsg extends Msg {
   constructor(public eventType: EventType,
               public receiveOrigin: boolean = false,
-              public eventDescriptor?: string[] | string,
+              public eventDescriptor?: string,
               public eventOnId?: number) {
     super(MsgType.Event, receiveOrigin);
   }
 }
 
 export class InfoMsg extends Msg {
-  constructor(public msg: string,
-              public receiveOrigin: boolean = true,
-              public browser?: string,
-              public username?: string) {
-    super(MsgType.Info, receiveOrigin);
+  constructor(public browser: string,
+              public username: string) {
+    super(MsgType.Info, false);
   }
 }

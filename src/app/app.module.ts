@@ -2,8 +2,10 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {AmMessageModule} from "./modules/am-message/am-message.module";
-import {AmUaaModule} from "@bi8/am-uaa";
+import {AmUaaModule, UaaConfig} from "@bi8/am-uaa";
 import {HttpClientModule} from "@angular/common/http";
+
+const uaaConfig: UaaConfig = {};
 
 @NgModule({
   declarations: [
@@ -15,7 +17,9 @@ import {HttpClientModule} from "@angular/common/http";
     AmUaaModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    { provide: 'UaaConfig', useValue: uaaConfig}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

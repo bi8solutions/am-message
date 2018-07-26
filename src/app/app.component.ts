@@ -16,6 +16,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.messageService.eventSub('home').subscribe(msg => console.dir(msg));
+
     const msg = new EventMsg(EventType.OpenedPage,true, 'home');
     this.messageService.pub(msg);
   }
@@ -25,7 +27,7 @@ export class AppComponent implements OnInit {
   }
 
   sendEvent() {
-    const msg = new EventMsg(EventType.Interact,true, ['home', 'button_interact']);
-    this.messageService.pub(msg);
+    const msg = new EventMsg(EventType.Interact, true, `'Interact' Button`);
+    this.messageService.pub(msg, true, 'home');
   }
 }
