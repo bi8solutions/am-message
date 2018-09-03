@@ -56,7 +56,7 @@ export class MessageService {
     }
     return this.stompService.subscribe(dest).subscribe(res => {
       let msg = JSON.parse(res.body) as T;
-      if (msg.originId === this.clientId && msg.receiveOrigin) {
+      if ((msg.originId == this.clientId && msg.receiveOrigin) || msg.originId != this.clientId) {
         subject.next(msg);
       }
     });
