@@ -17,7 +17,7 @@ export enum EventType {
   ClosedPage = 'ClosedPage',
   Interact = 'Interact',
   Reading = 'Reading',
-  Editing = 'Editnig',
+  Editing = 'Editing',
   LoggedIn = 'LoggedIn',
   LoggedOut = 'LoggedOut'
 }

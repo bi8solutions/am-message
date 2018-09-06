@@ -1,6 +1,6 @@
 {
   "name": "@bi8/am-message",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -21,13 +21,13 @@
   },
   "peerDependencies": {},
   "dependencies": {
-    "@angular/common": "6.0.9",
-    "@angular/compiler": "6.0.9",
-    "@angular/core": "6.0.9",
-    "@angular/platform-browser": "6.0.9",
-    "@angular/platform-browser-dynamic": "6.0.9",
-    "@angular/router": "6.0.9",
-    "@bi8/am-uaa": "^6.0.1",
+    "@angular/common": "^6.1.0",
+    "@angular/compiler": "^6.1.0",
+    "@angular/core": "^6.1.0",
+    "@angular/platform-browser": "^6.1.0",
+    "@angular/platform-browser-dynamic": "^6.1.0",
+    "@angular/router": "^6.1.0",
+    "@bi8/am-uaa": "^6.1.0",
     "@stomp/ng2-stompjs": "^4.0.0",
     "sockjs-client": "^1.1.5",
     "core-js": "^2.5.7",

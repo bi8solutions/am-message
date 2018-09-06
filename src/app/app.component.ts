@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {MessageService} from "./modules/am-message/message.service";
-import {UaaEvent, UaaEventService} from "@bi8/am-uaa";
-import {EventMsg, EventType} from "./modules/am-message/message";
+import {MessageService} from './modules/am-message/message.service';
+import {UaaEvent, UaaEventService} from '@bi8/am-uaa';
+import {EventMsg, EventType, MsgType} from './modules/am-message/message';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-root',
